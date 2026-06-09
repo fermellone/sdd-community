@@ -1,6 +1,6 @@
-import { db } from './index'
+import { getDb } from './index'
 import { providers, phases, models } from './schema'
-import { eq, sql } from 'drizzle-orm'
+import { eq } from 'drizzle-orm'
 
 const PHASE_DATA = [
   { name: 'sdd-explore', responsibility: 'Exploración', description: 'Investigación inicial, análisis del problema, exploración de soluciones posibles.', slug: 'sdd-explore' },
@@ -44,29 +44,29 @@ const MODEL_DATA: Record<string, string[]> = {
 export async function seed() {
   // Seed providers (idempotent)
   for (const p of PROVIDER_DATA) {
-    const existing = await db.select().from(providers).where(eq(providers.slug, p.slug)).limit(1)
+    const existing = await getDb().select().from(providers).where(eq(providers.slug, p.slug)).limit(1)
     if (existing.length === 0) {
-      await db.insert(providers).values(p)
+      await getDb().insert(providers).values(p)
     }
   }
 
   // Seed phases (idempotent)
   for (const ph of PHASE_DATA) {
-    const existing = await db.select().from(phases).where(eq(phases.slug, ph.slug)).limit(1)
+    const existing = await getDb().select().from(phases).where(eq(phases.slug, ph.slug)).limit(1)
     if (existing.length === 0) {
-      await db.insert(phases).values(ph)
+      await getDb().insert(phases).values(ph)
     }
   }
 
   // Seed models (idempotent)
-  const allProviders = await db.select().from(providers)
+  const allProviders = await getDb().select().from(providers)
   for (const [slug, modelNames] of Object.entries(MODEL_DATA)) {
     const provider = allProviders.find((p) => p.slug === slug)
     if (!provider) continue
     for (const name of modelNames) {
-      const existing = await db.select().from(models).where(eq(models.name, name)).limit(1)
+      const existing = await getDb().select().from(models).where(eq(models.name, name)).limit(1)
       if (existing.length === 0) {
-        await db.insert(models).values({ name, providerId: provider.id })
+        await getDb().insert(models).values({ name, providerId: provider.id })
       }
     }
   }
