@@ -6,8 +6,9 @@ import type { PhaseWithRankings, ModelResult, ProviderResult } from './types'
 export async function getPhases(
   db: Db,
   providerIds?: number[],
+  currentUserClerkId?: string,
 ): Promise<PhaseWithRankings[]> {
-  const { phases } = schema
+  const { phases, votes, users, models, providers } = schema
 
   // Get all phases
   const allPhases = await db.select().from(phases).orderBy(phases.id)
@@ -69,6 +70,36 @@ export async function getPhases(
     voters: Array<{ userId: number; userName: string; userAvatarUrl: string | null }>
   }>
 
+  const currentUserVoteRows = currentUserClerkId
+    ? await db
+      .select({
+        phaseId: votes.phaseId,
+        modelId: models.id,
+        modelName: models.name,
+        providerId: providers.id,
+        providerName: providers.name,
+        providerSlug: providers.slug,
+      })
+      .from(votes)
+      .innerJoin(users, eq(votes.userId, users.id))
+      .innerJoin(models, eq(votes.modelId, models.id))
+      .innerJoin(providers, eq(votes.providerId, providers.id))
+      .where(eq(users.clerkId, currentUserClerkId))
+    : []
+
+  const currentUserVotesByPhase = new Map(
+    currentUserVoteRows.map((vote) => [
+      vote.phaseId,
+      {
+        modelId: vote.modelId,
+        modelName: vote.modelName,
+        providerId: vote.providerId,
+        providerName: vote.providerName,
+        providerSlug: vote.providerSlug,
+      },
+    ]),
+  )
+
   // Group by phase
   return allPhases.map(phase => ({
     id: phase.id,
@@ -76,6 +107,7 @@ export async function getPhases(
     responsibility: phase.responsibility,
     description: phase.description,
     slug: phase.slug,
+    currentUserVote: currentUserVotesByPhase.get(phase.id) ?? null,
     models: rows
       .filter(r => r.phase_id === phase.id)
       .map(r => ({

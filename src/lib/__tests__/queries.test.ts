@@ -1,12 +1,22 @@
-import { describe, it, expect, beforeAll, beforeEach } from 'vitest'
+import { describe, it, expect, beforeAll } from 'vitest'
 import { PGlite } from '@electric-sql/pglite'
 import { drizzle } from 'drizzle-orm/pglite'
-import { migrate } from 'drizzle-orm/pglite/migrator'
 import type { Db } from '@/db'
 import * as schema from '@/db/schema'
 
 // We'll test queries against a real PGlite instance
 let db: Db
+
+function findPhase(
+  phases: Awaited<ReturnType<typeof import('../queries').getPhases>>,
+  slug: string,
+) {
+  const phase = phases.find(p => p.slug === slug)
+  if (!phase) {
+    throw new Error(`Expected phase ${slug} to exist`)
+  }
+  return phase
+}
 
 beforeAll(async () => {
   const pg = new PGlite()
@@ -92,7 +102,7 @@ describe('getPhases', () => {
 
     expect(phases).toHaveLength(2)
 
-    const explore = phases.find(p => p.slug === 'sdd-explore')!
+    const explore = findPhase(phases, 'sdd-explore')
     expect(explore.models).toHaveLength(2)
 
     // claude-sonnet-4 should be rank 1 (2 votes from users 2 and 3)
@@ -110,7 +120,7 @@ describe('getPhases', () => {
     const { getPhases } = await import('../queries')
     const phases = await getPhases(db, [1]) // OpenAI Plus only
 
-    const explore = phases.find(p => p.slug === 'sdd-explore')!
+    const explore = findPhase(phases, 'sdd-explore')
     expect(explore.models.every(m => m.providerId === 1)).toBe(true)
   })
 
@@ -118,9 +128,31 @@ describe('getPhases', () => {
     const { getPhases } = await import('../queries')
     const phases = await getPhases(db, [3]) // nonexistent provider
 
-    const propose = phases.find(p => p.slug === 'sdd-propose')!
+    const propose = findPhase(phases, 'sdd-propose')
     // sdd-propose has 1 vote for claude-sonnet-4 (provider 2), not provider 3
     expect(propose.models).toHaveLength(0)
+  })
+
+  it('includes current user vote independently from provider ranking filter', async () => {
+    const { getPhases } = await import('../queries')
+    const phases = await getPhases(db, [3], 'user_001')
+
+    const propose = findPhase(phases, 'sdd-propose')
+    expect(propose.models).toHaveLength(0)
+    expect(propose.currentUserVote).toEqual({
+      modelId: 3,
+      modelName: 'claude-sonnet-4',
+      providerId: 2,
+      providerName: 'Anthropic Pro',
+      providerSlug: 'anthropic-pro',
+    })
+  })
+
+  it('sets current user vote to null when the Clerk user has not voted', async () => {
+    const { getPhases } = await import('../queries')
+    const phases = await getPhases(db, undefined, 'unknown_user')
+
+    expect(phases.every((phase) => phase.currentUserVote === null)).toBe(true)
   })
 })
 
@@ -166,9 +198,9 @@ describe('upsertVote', () => {
     expect(result.vote.modelId).toBe(1)
     expect(result.vote.providerId).toBe(1)
     expect(result.history).toBeDefined()
-    expect(result.history!.oldModelId).toBe(3)
-    expect(result.history!.oldProviderId).toBe(2)
-    expect(result.history!.newModelId).toBe(1)
-    expect(result.history!.newProviderId).toBe(1)
+    expect(result.history?.oldModelId).toBe(3)
+    expect(result.history?.oldProviderId).toBe(2)
+    expect(result.history?.newModelId).toBe(1)
+    expect(result.history?.newProviderId).toBe(1)
   })
 })

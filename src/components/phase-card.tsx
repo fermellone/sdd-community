@@ -16,6 +16,7 @@ export function PhaseCard({ phase, onVoteClick }: PhaseCardProps) {
   const { isSignedIn } = useUser()
   const main = phase.models[0]
   const fallback = phase.models[1]
+  const voteButtonLabel = phase.currentUserVote ? 'Cambiar voto' : 'Votar'
 
   return (
     <Card className="w-full max-w-md">
@@ -73,7 +74,7 @@ export function PhaseCard({ phase, onVoteClick }: PhaseCardProps) {
             className="w-full"
             onClick={() => onVoteClick?.(phase)}
           >
-            Votar
+            {voteButtonLabel}
           </Button>
         ) : (
           <SignInButton mode="modal">

@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
-import { useUser } from "@clerk/nextjs"
+import { UserButton, useUser } from "@clerk/nextjs"
 import { PhaseCard } from "./phase-card"
 import { VoteModal } from "./vote-modal"
 import { ProviderFilter } from "./provider-filter"
@@ -88,7 +88,7 @@ export function PhaseGrid({
             selectedIds={filter}
             onChange={handleFilterChange}
           />
-          {!isSignedIn && <SignInButton />}
+          {isSignedIn ? <UserButton /> : <SignInButton />}
         </div>
       </header>
 

@@ -92,6 +92,28 @@ describe('PhaseCard', () => {
     expect(screen.getByText('Votar')).toBeDefined()
   })
 
+  it('shows Cambiar voto button when signed in user already voted', async () => {
+    const { useUser } = await import('@clerk/nextjs')
+    ;(useUser as ReturnType<typeof vi.fn>).mockReturnValue({ isSignedIn: true })
+
+    render(
+      <PhaseCard
+        phase={{
+          ...mockPhase,
+          currentUserVote: {
+            modelId: 1,
+            modelName: 'claude-sonnet-4',
+            providerId: 2,
+            providerName: 'Anthropic Pro',
+            providerSlug: 'anthropic-pro',
+          },
+        }}
+      />,
+    )
+
+    expect(screen.getByText('Cambiar voto')).toBeDefined()
+  })
+
   it('calls onVoteClick when Votar is clicked', async () => {
     const { useUser } = await import('@clerk/nextjs')
     ;(useUser as ReturnType<typeof vi.fn>).mockReturnValue({ isSignedIn: true })
