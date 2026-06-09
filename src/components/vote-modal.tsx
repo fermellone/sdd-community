@@ -44,6 +44,9 @@ export function VoteModal({
     ? models.filter((m) => m.providerId === parseInt(selectedProvider))
     : models
 
+  const providerItems = providers.map((p) => ({ value: String(p.id), label: p.name }))
+  const modelItems = filteredModels.map((m) => ({ value: String(m.id), label: m.name }))
+
   const handleSubmit = async () => {
     if (!phase || !selectedModel || !selectedProvider) return
 
@@ -81,6 +84,7 @@ export function VoteModal({
                 setSelectedProvider(v ?? '')
                 setSelectedModel('')
               }}
+              items={providerItems}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Seleccioná un proveedor" />
@@ -101,6 +105,7 @@ export function VoteModal({
               value={selectedModel}
               onValueChange={(v) => setSelectedModel(v ?? '')}
               disabled={!selectedProvider}
+              items={modelItems}
             >
               <SelectTrigger>
                 <SelectValue
