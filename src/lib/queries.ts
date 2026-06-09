@@ -5,7 +5,7 @@ import type { PhaseWithRankings, ModelResult, ProviderResult } from './types'
 
 export async function getPhases(
   db: Db,
-  providerId?: number,
+  providerIds?: number[],
 ): Promise<PhaseWithRankings[]> {
   const { phases } = schema
 
@@ -13,7 +13,7 @@ export async function getPhases(
   const allPhases = await db.select().from(phases).orderBy(phases.id)
 
   // Use raw SQL for RANK() window function — Drizzle query builder doesn't support it well
-  const providerCondition = providerId ? `AND v.provider_id = ${providerId}` : ''
+  const providerCondition = providerIds?.length ? `AND v.provider_id IN (${providerIds.join(',')})` : ''
   const rawResult = await db.execute(sql`
     WITH ranked AS (
       SELECT

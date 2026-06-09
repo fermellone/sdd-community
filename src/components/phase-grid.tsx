@@ -13,28 +13,31 @@ interface PhaseGridProps {
   initialPhases: PhaseWithRankings[]
   providers: ProviderResult[]
   models: ModelResult[]
-  providerFilter: string
+  selectedProviderIds: string[]
 }
 
 export function PhaseGrid({
   initialPhases,
   providers,
   models,
-  providerFilter,
+  selectedProviderIds,
 }: PhaseGridProps) {
   const router = useRouter()
   const { isSignedIn } = useUser()
-  const [filter, setFilter] = useState(providerFilter)
+  const [filter, setFilter] = useState<string[]>(selectedProviderIds)
   const [phases, setPhases] = useState(initialPhases)
   const [voteModalOpen, setVoteModalOpen] = useState(false)
   const [selectedPhase, setSelectedPhase] = useState<PhaseWithRankings | null>(null)
   const [votingError, setVotingError] = useState<string | null>(null)
 
   const handleFilterChange = useCallback(
-    (value: string | null) => {
-      const newFilter = value ?? "all"
-      setFilter(newFilter)
-      router.push(newFilter === "all" ? "/" : `/?provider=${newFilter}`)
+    (providerIds: string[]) => {
+      setFilter(providerIds)
+      if (providerIds.length === 0) {
+        router.push('/')
+      } else {
+        router.push(`/?provider=${providerIds.join(',')}`)
+      }
     },
     [router],
   )
@@ -59,7 +62,8 @@ export function PhaseGrid({
       }
 
       // Refresh phases
-      const phasesRes = await fetch(`/api/phases${filter !== "all" ? `?provider=${filter}` : ""}`)
+      const filterParam = filter.length > 0 ? `?provider=${filter.join(',')}` : ''
+      const phasesRes = await fetch(`/api/phases${filterParam}`)
       const phasesData = await phasesRes.json()
       setPhases(phasesData.data)
     },
@@ -81,7 +85,7 @@ export function PhaseGrid({
         <div className="flex items-center gap-3">
           <ProviderFilter
             providers={providers}
-            value={filter}
+            selectedIds={filter}
             onChange={handleFilterChange}
           />
           {!isSignedIn && <SignInButton />}

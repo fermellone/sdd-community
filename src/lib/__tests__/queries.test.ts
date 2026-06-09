@@ -2,14 +2,15 @@ import { describe, it, expect, beforeAll, beforeEach } from 'vitest'
 import { PGlite } from '@electric-sql/pglite'
 import { drizzle } from 'drizzle-orm/pglite'
 import { migrate } from 'drizzle-orm/pglite/migrator'
+import type { Db } from '@/db'
 import * as schema from '@/db/schema'
 
 // We'll test queries against a real PGlite instance
-let db: ReturnType<typeof drizzle>
+let db: Db
 
 beforeAll(async () => {
   const pg = new PGlite()
-  db = drizzle(pg, { schema })
+  db = drizzle(pg, { schema }) as Db
 
   // Create tables manually since we can't run drizzle migrations in PGlite easily
   await pg.exec(`
@@ -107,7 +108,7 @@ describe('getPhases', () => {
 
   it('filters by provider', async () => {
     const { getPhases } = await import('../queries')
-    const phases = await getPhases(db, 1) // OpenAI Plus only
+    const phases = await getPhases(db, [1]) // OpenAI Plus only
 
     const explore = phases.find(p => p.slug === 'sdd-explore')!
     expect(explore.models.every(m => m.providerId === 1)).toBe(true)
@@ -115,7 +116,7 @@ describe('getPhases', () => {
 
   it('returns empty models array for phase with no votes', async () => {
     const { getPhases } = await import('../queries')
-    const phases = await getPhases(db, 3) // nonexistent provider
+    const phases = await getPhases(db, [3]) // nonexistent provider
 
     const propose = phases.find(p => p.slug === 'sdd-propose')!
     // sdd-propose has 1 vote for claude-sonnet-4 (provider 2), not provider 3

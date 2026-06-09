@@ -43,10 +43,11 @@ async function fetchModels(): Promise<ModelResult[]> {
 
 export default async function Home({ searchParams }: HomeProps) {
   const params = await searchParams
-  const provider = params.provider || "all"
+  const providerParam = params.provider || ''
+  const selectedProviderIds = providerParam ? providerParam.split(',') : []
 
   const [phases, providers, models] = await Promise.all([
-    fetchPhases(provider !== "all" ? provider : undefined),
+    fetchPhases(providerParam || undefined),
     fetchProviders(),
     fetchModels(),
   ])
@@ -56,7 +57,7 @@ export default async function Home({ searchParams }: HomeProps) {
       initialPhases={phases}
       providers={providers}
       models={models}
-      providerFilter={provider}
+      selectedProviderIds={selectedProviderIds}
     />
   )
 }
