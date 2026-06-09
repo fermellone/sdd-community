@@ -29,16 +29,107 @@ const PROVIDER_DATA = [
 ]
 
 const MODEL_DATA: Record<string, string[]> = {
-  'openai-plus': ['gpt-4o', 'gpt-4-turbo', 'gpt-4o-mini'],
-  'openai-pro-x5': ['gpt-4o', 'o1', 'o3-mini'],
-  'openai-pro-x10': ['gpt-4o', 'o1-pro', 'o3'],
-  'anthropic-pro': ['claude-sonnet-4', 'claude-haiku-3.5'],
-  'anthropic-max-x5': ['claude-sonnet-4', 'claude-opus-4'],
-  'anthropic-max-x10': ['claude-opus-4', 'claude-sonnet-4', 'claude-haiku-3.5'],
-  'opencode-go': ['deepseek-v4', 'deepseek-v4-pro'],
-  'opencode-zen': ['deepseek-v4', 'deepseek-v4-pro', 'gemini-2.5-pro'],
-  'openrouter-free': ['gemini-2.5-flash', 'deepseek-chat', 'llama-4-maverick'],
-  'openrouter-payg': ['claude-sonnet-4', 'gpt-4o', 'gemini-2.5-pro', 'deepseek-chat', 'llama-4-maverick', 'qwen3-max'],
+  // OpenAI Plus — entry-level models
+  'openai-plus': [
+    'gpt-4o',
+    'gpt-4o-mini',
+    'gpt-4.1',
+    'gpt-4.1-mini',
+    'gpt-4.1-nano',
+    'o3-mini',
+    'o4-mini',
+  ],
+  // OpenAI Pro (x5) — mid-tier models
+  'openai-pro-x5': [
+    'gpt-5',
+    'gpt-5-mini',
+    'gpt-5-nano',
+    'gpt-5-codex',
+    'gpt-5-chat',
+    'o3',
+    'o4-mini',
+    'gpt-4o',
+  ],
+  // OpenAI Pro (x10) — premium models
+  'openai-pro-x10': [
+    'gpt-5-pro',
+    'gpt-5.5',
+    'gpt-5.5-pro',
+    'gpt-5.4-pro',
+    'gpt-5.4',
+    'o1-pro',
+    'o3-pro',
+    'gpt-5.2-pro',
+    'gpt-5-image',
+  ],
+  // Anthropic Pro — balanced Claude models
+  'anthropic-pro': [
+    'claude-sonnet-4.6',
+    'claude-haiku-4.5',
+    'claude-sonnet-4.5',
+  ],
+  // Anthropic Max (x5) — advanced Opus + Sonnet
+  'anthropic-max-x5': [
+    'claude-opus-4.7',
+    'claude-sonnet-4.6',
+    'claude-opus-4.6',
+  ],
+  // Anthropic Max (x10) — top-tier Opus only
+  'anthropic-max-x10': [
+    'claude-opus-4.8',
+    'claude-opus-4.7',
+    'claude-opus-4.6',
+    'claude-sonnet-4.6',
+  ],
+  // OpenCode Go — accessible, cost-effective models
+  'opencode-go': [
+    'deepseek-v4-pro',
+    'deepseek-chat',
+    'deepseek-r1',
+    'gemini-2.5-flash',
+    'gemini-2.5-flash-lite',
+    'qwen3-max',
+    'llama-4-maverick',
+    'mistral-large-2512',
+  ],
+  // OpenCode Zen — premium, high-capability models
+  'opencode-zen': [
+    'claude-opus-4.8',
+    'gpt-5-pro',
+    'gemini-2.5-pro',
+    'deepseek-v4-pro',
+    'grok-4.20',
+    'qwen3.7-max',
+    'claude-sonnet-4.6',
+    'o3-pro',
+    'mistral-large-2512',
+  ],
+  // OpenRouter (Free) — free-tier models
+  'openrouter-free': [
+    'deepseek-chat',
+    'deepseek-r1',
+    'gemini-2.5-flash',
+    'gemini-2.5-flash-lite',
+    'llama-4-maverick',
+    'llama-4-scout',
+    'qwen3-coder',
+    'mistral-small-3.2-24b-instruct',
+  ],
+  // OpenRouter (PAYG) — full catalog highlights
+  'openrouter-payg': [
+    'claude-opus-4.8',
+    'gpt-5-pro',
+    'gemini-2.5-pro',
+    'deepseek-v4-pro',
+    'grok-4.20',
+    'llama-4-maverick',
+    'qwen3.7-max',
+    'mistral-large-2512',
+    'claude-sonnet-4.6',
+    'gpt-5',
+    'o3',
+    'deepseek-chat',
+  ],
 }
 
 export async function seed() {
