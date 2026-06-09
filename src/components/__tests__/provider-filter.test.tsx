@@ -10,16 +10,16 @@ const mockProviders = [
 describe('ProviderFilter', () => {
   it('renders with current value displayed', () => {
     render(<ProviderFilter providers={mockProviders} value="all" onChange={() => {}} />)
-    // The select trigger shows the current value "all"
+    // The select trigger displays the label, not the raw value
     const trigger = screen.getByRole('combobox')
     expect(trigger).toBeDefined()
-    expect(trigger.textContent).toContain('all')
+    expect(trigger.textContent).toContain('Todos')
   })
 
   it('renders with provider value', () => {
     render(<ProviderFilter providers={mockProviders} value="1" onChange={() => {}} />)
     const trigger = screen.getByRole('combobox')
     expect(trigger).toBeDefined()
-    expect(trigger.textContent).toContain('1')
+    expect(trigger.textContent).toContain('OpenAI Plus')
   })
 })

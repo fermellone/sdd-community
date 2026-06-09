@@ -16,9 +16,14 @@ interface ProviderFilterProps {
 }
 
 export function ProviderFilter({ providers, value, onChange }: ProviderFilterProps) {
+  const selectItems = [
+    { value: 'all', label: 'Todos' },
+    ...providers.map((p) => ({ value: String(p.id), label: p.name })),
+  ]
+
   return (
     <div className="w-full max-w-xs">
-      <Select value={value} onValueChange={onChange}>
+      <Select value={value} onValueChange={onChange} items={selectItems}>
         <SelectTrigger>
           <SelectValue placeholder="Filtrar por proveedor" />
         </SelectTrigger>
