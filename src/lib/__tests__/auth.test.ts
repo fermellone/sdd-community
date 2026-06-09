@@ -13,7 +13,7 @@ describe('requireUser', () => {
 
   it('returns userId when authenticated', async () => {
     const { auth } = await import('@clerk/nextjs/server')
-    ;(auth as ReturnType<typeof vi.fn>).mockResolvedValue({
+    ;(auth as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({
       userId: 'user_001',
     })
 
@@ -25,7 +25,7 @@ describe('requireUser', () => {
 
   it('throws 401 when not authenticated', async () => {
     const { auth } = await import('@clerk/nextjs/server')
-    ;(auth as ReturnType<typeof vi.fn>).mockResolvedValue({
+    ;(auth as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({
       userId: null,
     })
 
@@ -33,18 +33,18 @@ describe('requireUser', () => {
     const result = await requireUser()
 
     expect(result).toBeInstanceOf(NextResponse)
-    expect(result.status).toBe(401)
+    expect((result as NextResponse).status).toBe(401)
   })
 
   it('throws 401 when auth throws', async () => {
     const { auth } = await import('@clerk/nextjs/server')
-    ;(auth as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('Clerk error'))
+    ;(auth as unknown as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('Clerk error'))
 
     const { requireUser } = await import('../auth')
     const result = await requireUser()
 
     expect(result).toBeInstanceOf(NextResponse)
-    expect(result.status).toBe(401)
+    expect((result as NextResponse).status).toBe(401)
   })
 })
 

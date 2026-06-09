@@ -8,18 +8,35 @@ const mockProviders = [
 ]
 
 describe('ProviderFilter', () => {
-  it('renders with current value displayed', () => {
-    render(<ProviderFilter providers={mockProviders} value="all" onChange={() => {}} />)
-    // The select trigger displays the label, not the raw value
-    const trigger = screen.getByRole('combobox')
-    expect(trigger).toBeDefined()
-    expect(trigger.textContent).toContain('Todos')
+  it('renders "Todos" when no providers selected', () => {
+    render(<ProviderFilter providers={mockProviders} selectedIds={[]} onChange={() => {}} />)
+    const button = screen.getByRole('button', { name: 'Filtrar por provider' })
+    expect(button).toBeDefined()
+    expect(button.textContent).toContain('Todos')
   })
 
-  it('renders with provider value', () => {
-    render(<ProviderFilter providers={mockProviders} value="1" onChange={() => {}} />)
-    const trigger = screen.getByRole('combobox')
-    expect(trigger).toBeDefined()
-    expect(trigger.textContent).toContain('OpenAI Plus')
+  it('renders provider name when single provider selected', () => {
+    render(<ProviderFilter providers={mockProviders} selectedIds={['1']} onChange={() => {}} />)
+    const button = screen.getByRole('button', { name: 'Filtrar por provider' })
+    expect(button).toBeDefined()
+    expect(button.textContent).toContain('OpenAI Plus')
+  })
+
+  it('renders count when multiple providers selected', () => {
+    render(<ProviderFilter providers={mockProviders} selectedIds={['1', '2']} onChange={() => {}} />)
+    const button = screen.getByRole('button', { name: 'Filtrar por provider' })
+    expect(button).toBeDefined()
+    expect(button.textContent).toContain('2 seleccionados')
+  })
+
+  it('renders visible tooltip content target with Spanish copy', () => {
+    render(<ProviderFilter providers={mockProviders} selectedIds={[]} onChange={() => {}} />)
+    const infoButton = screen.getByRole('button', { name: 'Información sobre el filtro de providers' })
+    const tooltip = screen.getByRole('tooltip')
+
+    expect(infoButton).toHaveAttribute('aria-describedby', tooltip.id)
+    expect(tooltip.textContent).toBe(
+      'Podés filtrar los resultados por uno o más providers a los que estás suscripto.',
+    )
   })
 })

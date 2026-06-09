@@ -6,6 +6,13 @@ export interface PhaseWithRankings {
   responsibility: string
   description: string
   slug: string
+  currentUserVote?: {
+    modelId: number
+    modelName: string
+    providerId: number
+    providerName: string
+    providerSlug: string
+  } | null
   models: {
     modelId: number
     modelName: string

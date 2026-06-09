@@ -1,54 +1,31 @@
-import { PhaseGrid } from "@/components/phase-grid"
-import type { PhaseWithRankings, ProviderResult, ModelResult } from "@/lib/types"
+import { auth } from '@clerk/nextjs/server'
+import { PhaseGrid } from '@/components/phase-grid'
+import { getDb } from '@/db'
+import { getModels, getPhases, getProviders } from '@/lib/queries'
 
 interface HomeProps {
   searchParams: Promise<{ provider?: string }>
 }
 
-async function fetchPhases(provider?: string): Promise<PhaseWithRankings[]> {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
-    const url = provider
-      ? `${baseUrl}/api/phases?provider=${provider}`
-      : `${baseUrl}/api/phases`
-    const res = await fetch(url, { cache: "no-store" })
-    const json = await res.json()
-    return json.data ?? []
-  } catch {
-    return []
-  }
-}
+function parseProviderIds(provider?: string): number[] {
+  if (!provider) return []
 
-async function fetchProviders(): Promise<ProviderResult[]> {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
-    const res = await fetch(`${baseUrl}/api/providers`, { cache: "no-store" })
-    const json = await res.json()
-    return json.data ?? []
-  } catch {
-    return []
-  }
-}
-
-async function fetchModels(): Promise<ModelResult[]> {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
-    const res = await fetch(`${baseUrl}/api/models`, { cache: "no-store" })
-    const json = await res.json()
-    return json.data ?? []
-  } catch {
-    return []
-  }
+  return provider
+    .split(',')
+    .map(Number)
+    .filter((n) => Number.isInteger(n) && n > 0)
 }
 
 export default async function Home({ searchParams }: HomeProps) {
   const params = await searchParams
-  const provider = params.provider || "all"
+  const providerIds = parseProviderIds(params.provider)
+  const selectedProviderIds = providerIds.map(String)
+  const { userId } = await auth()
 
   const [phases, providers, models] = await Promise.all([
-    fetchPhases(provider !== "all" ? provider : undefined),
-    fetchProviders(),
-    fetchModels(),
+    getPhases(getDb(), providerIds.length > 0 ? providerIds : undefined, userId ?? undefined),
+    getProviders(getDb()),
+    getModels(getDb()),
   ])
 
   return (
@@ -56,7 +33,7 @@ export default async function Home({ searchParams }: HomeProps) {
       initialPhases={phases}
       providers={providers}
       models={models}
-      providerFilter={provider}
+      selectedProviderIds={selectedProviderIds}
     />
   )
 }
