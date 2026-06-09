@@ -10,8 +10,8 @@ context: |
   Database: NeonDB (PostgreSQL)
   Auth: Clerk (Discord OAuth)
   UI: ShadCN (install via pnpx)
-  Architecture: Not yet implemented — greenfield project
-  Stack Status: Defined but not yet scaffolded
+  Architecture: Next.js 16 App Router + Drizzle ORM + ShadCN v4
+  Stack Status: Scaffolded — PRs 1-4 implemented
 
 testing:
   strict_tdd: true
@@ -20,15 +20,15 @@ testing:
     (project is empty). Test infrastructure must be set up during
     first implementation phase. Candidate: Vitest + Testing Library
     (Next.js 16 convention).
-  test_runner: null
+  test_runner: vitest
   test_layers:
-    unit: false
-    integration: false
+    unit: true
+    integration: true
     e2e: false
-  coverage: false
-  linter: null
-  type_checker: null
-  formatter: null
+  coverage: true
+  linter: biome
+  type_checker: typescript
+  formatter: biome
 
 chained_pr:
   strategy: ask-always
@@ -50,10 +50,10 @@ rules:
   apply:
     - Follow existing code patterns once established
     tdd: true
-    test_command: ""  # TBD — will be set during first implementation
+    test_command: "npx vitest run"
   verify:
-    test_command: ""   # TBD
-    build_command: ""  # TBD
-    coverage_threshold: 0
+    test_command: "npx vitest run"
+    build_command: "npx next build"
+    coverage_threshold: 80
   archive:
     - Warn before merging destructive deltas
