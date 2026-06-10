@@ -1,0 +1,21 @@
+SDD Community notices and references
+
+SDD Community is an independent community-built companion for the Gentle-AI
+Spec-Driven Development workflow. It is not an official Gentle-AI product and
+does not replace Gentle-AI.
+
+Gentle-AI
+
+Portions of the SDD workflow framing and model-selection context were informed
+by the Gentle-AI project.
+
+Copyright (c) 2025 Gentleman Programming
+Licensed under the MIT License.
+https://github.com/Gentleman-Programming/gentle-ai
+
+SDD Team Optimizer
+
+The model catalog and SDD model-selection framing were also informed by SDD
+Team Optimizer by RamonsDka.
+
+https://github.com/RamonsDka/ssd-optimizer-v1

@@ -1,16 +1,23 @@
 # SDD Community
 
-SDD Community is a Next.js app for exploring Spec-Driven Development phases, AI providers, and models in one shared interface. It is built to help teams compare implementation workflows, understand the SDD lifecycle, and contribute improvements around AI-assisted software delivery.
+SDD Community is a community-built companion for the [Gentle-AI](https://github.com/Gentleman-Programming/gentle-ai) Spec-Driven Development workflow. It helps the Gentle-AI community compare AI providers and models across SDD phase agents, so model choices can be discussed, voted on, and improved in one shared place.
 
 ## Why this exists
 
-AI coding tools move fast, but good software still needs clear intent, explicit tradeoffs, and reviewable implementation steps. This project focuses on making SDD workflows easier to inspect, discuss, and improve as a community.
+AI coding tools move fast, but good software still needs clear intent, explicit tradeoffs, and reviewable implementation steps. This project focuses on making the Gentle-AI SDD workflow easier to inspect, discuss, and improve as a community.
+
+## Built for the Gentle-AI community
+
+[Gentle-AI](https://github.com/Gentleman-Programming/gentle-ai), created by Alan Buscaglia and the Gentleman Programming community, is an ecosystem configurator for AI coding agents. It adds persistent memory, curated skills, Spec-Driven Development workflows, MCP integrations, provider switching, and per-phase model assignment to agents such as OpenCode, Claude Code, Cursor, Gemini CLI, Codex, and others.
+
+This project was created from inside that community. It is not a replacement for Gentle-AI; it is a community space around one of its most important decisions: which model should run each SDD phase. Gentle-AI can assign different models to different SDD phase agents—for example exploration, proposal, specification, design, tasks, implementation, verification, and archive. SDD Community makes those choices visible and comparable instead of leaving them hidden in local configuration.
 
 ## Features
 
 - Browse SDD phases in a visual grid.
 - Filter phases by AI provider.
 - View provider and model data from a Postgres-compatible database.
+- Compare community preferences for model choices across SDD phase responsibilities.
 - Support authenticated user context with Clerk.
 - Use a modern Next.js, React, Drizzle, Tailwind CSS, and Vitest stack.
 
@@ -107,6 +114,17 @@ If your change affects database behavior, include the relevant Drizzle migration
 - Explain the problem before proposing a solution.
 - Prefer clear tradeoffs over clever abstractions.
 - Keep documentation updated when behavior changes.
+
+## Credits and references
+
+The model catalog and SDD phase framing were built with references and community material from:
+
+- [Alan Buscaglia / Gentleman Programming](https://github.com/Gentleman-Programming)
+- [RamonsDka](https://github.com/RamonsDka)
+
+The Gentle-AI documentation was used to align this project with its SDD agent and OpenCode profile concepts, where different models can be assigned to different SDD phases. SDD Team Optimizer by RamonsDka also informed the model catalog and model-selection framing.
+
+See [NOTICE](NOTICE) for project references and license attribution details.
 
 ## License
 
