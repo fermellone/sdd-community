@@ -1,36 +1,115 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SDD Community
 
-## Getting Started
+SDD Community is a Next.js app for exploring Spec-Driven Development phases, AI providers, and models in one shared interface. It is built to help teams compare implementation workflows, understand the SDD lifecycle, and contribute improvements around AI-assisted software delivery.
 
-First, run the development server:
+## Why this exists
+
+AI coding tools move fast, but good software still needs clear intent, explicit tradeoffs, and reviewable implementation steps. This project focuses on making SDD workflows easier to inspect, discuss, and improve as a community.
+
+## Features
+
+- Browse SDD phases in a visual grid.
+- Filter phases by AI provider.
+- View provider and model data from a Postgres-compatible database.
+- Support authenticated user context with Clerk.
+- Use a modern Next.js, React, Drizzle, Tailwind CSS, and Vitest stack.
+
+## Tech stack
+
+| Area | Tooling |
+| --- | --- |
+| App framework | Next.js 16, React 19 |
+| Auth | Clerk |
+| Database | Neon/Postgres with Drizzle ORM |
+| Styling | Tailwind CSS, Base UI, shadcn-compatible components |
+| Testing | Vitest, Testing Library, jsdom |
+| Code quality | Biome |
+
+## Getting started
+
+### Prerequisites
+
+- Node.js 20 or newer
+- pnpm
+- A Clerk application
+- A Neon or Postgres-compatible database
+
+### Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+cp .env.local.example .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Fill in the required values in `.env.local`, then prepare the database:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm db:migrate
+pnpm db:seed
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Start the development server:
 
-## Learn More
+```bash
+pnpm dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Available scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Command | Description |
+| --- | --- |
+| `pnpm dev` | Start the local development server. |
+| `pnpm build` | Build the production application. |
+| `pnpm start` | Start the production server. |
+| `pnpm test` | Run the test suite once. |
+| `pnpm test:watch` | Run tests in watch mode. |
+| `pnpm lint` | Run Biome checks. |
+| `pnpm format` | Format files with Biome. |
+| `pnpm db:generate` | Generate Drizzle migrations. |
+| `pnpm db:migrate` | Apply Drizzle migrations. |
+| `pnpm db:push` | Push the current schema to the database. |
+| `pnpm db:studio` | Open Drizzle Studio. |
+| `pnpm db:seed` | Seed local development data. |
 
-## Deploy on Vercel
+## Project structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```text
+src/
+  app/          Next.js app routes and pages
+  components/   Reusable UI components
+  db/           Database connection, schema, and seed logic
+  lib/          Shared queries and utilities
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Contributing
+
+Contributions are welcome. The best contributions are small, focused, and easy to review.
+
+Before opening a pull request:
+
+1. Create or pick an issue that describes the problem.
+2. Keep the change scoped to one concern.
+3. Run the checks locally:
+
+```bash
+pnpm lint
+pnpm test
+pnpm build
+```
+
+If your change affects database behavior, include the relevant Drizzle migration and mention how you tested it.
+
+## Community expectations
+
+- Be respectful and constructive in issues and reviews.
+- Explain the problem before proposing a solution.
+- Prefer clear tradeoffs over clever abstractions.
+- Keep documentation updated when behavior changes.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+You may use, copy, modify, merge, publish, distribute, sublicense, and sell copies of the software, as long as the original copyright and license notice are included.
